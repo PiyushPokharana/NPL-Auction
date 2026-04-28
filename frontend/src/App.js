@@ -11,15 +11,15 @@ import { getSocket, initSocket } from './services/socketService';
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const { userRole } = useAuction();
-  
+
   if (!userRole) {
     return <Navigate to="/" />;
   }
-  
+
   if (allowedRole && userRole !== allowedRole) {
     return <Navigate to="/" />;
   }
-  
+
   return children;
 };
 
@@ -28,14 +28,34 @@ const AppContent = () => {
 
   React.useEffect(() => {
     const socket = initSocket();
-    
+
     const handleErrorMessage = (data) => {
       setGlobalError(data.message);
     };
 
     socket.on('errorMessage', handleErrorMessage);
+    const handleConnect = () => {
+      setGlobalError(null);
+      setGlobalSuccess('Connected');
+      setTimeout(() => setGlobalSuccess(null), 2000);
+    };
+
+    const handleDisconnect = () => {
+      setGlobalError('Connection Lost: Connecting... (Auto-reconnect in progress)');
+    };
+
+    const handleConnectError = () => {
+      setGlobalError('Connection Lost: Connecting... (Auto-reconnect in progress)');
+    };
+
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('connect_error', handleConnectError);
     return () => {
       socket.off('errorMessage', handleErrorMessage);
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('connect_error', handleConnectError);
     };
   }, [setGlobalError]);
 
@@ -71,21 +91,21 @@ const AppContent = () => {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route 
-            path="/auctioneer" 
+          <Route
+            path="/auctioneer"
             element={
               <ProtectedRoute allowedRole="auctioneer">
                 <AuctioneerPanel />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/team-manager" 
+          <Route
+            path="/team-manager"
             element={
               <ProtectedRoute allowedRole="team-manager">
                 <TeamManagerPanel />
               </ProtectedRoute>
-            } 
+            }
           />
         </Routes>
       </main>

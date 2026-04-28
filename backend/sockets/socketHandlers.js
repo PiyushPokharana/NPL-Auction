@@ -3,11 +3,11 @@ const { startAuction, acceptBid, rejectBid } = require('../controllers/auctionCo
 
 const createMockRes = (socket) => {
     return {
-        status: function(code) {
+        status: function (code) {
             this.statusCode = code;
             return this;
         },
-        json: function(data) {
+        json: function (data) {
             if (this.statusCode >= 400 && data.message) {
                 socket.emit('errorMessage', { message: data.message });
             }
@@ -25,7 +25,10 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await placeBid(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
+                if (error) {
+                    console.error('[Socket placeBid] handler error', error);
+                    socket.emit('errorMessage', { message: 'Something went wrong. Please refresh.' });
+                }
             });
         });
 
@@ -34,7 +37,10 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await startAuction(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
+                if (error) {
+                    console.error('[Socket startAuction] handler error', error);
+                    socket.emit('errorMessage', { message: 'Something went wrong. Please refresh.' });
+                }
             });
         });
 
@@ -43,7 +49,10 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await acceptBid(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
+                if (error) {
+                    console.error('[Socket acceptBid] handler error', error);
+                    socket.emit('errorMessage', { message: 'Something went wrong. Please refresh.' });
+                }
             });
         });
 
@@ -52,8 +61,15 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await rejectBid(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
+                if (error) {
+                    console.error('[Socket rejectBid] handler error', error);
+                    socket.emit('errorMessage', { message: 'Something went wrong. Please refresh.' });
+                }
             });
+        });
+
+        socket.on('error', (err) => {
+            console.error('Socket error on', socket.id, err);
         });
 
         socket.on('disconnect', () => {

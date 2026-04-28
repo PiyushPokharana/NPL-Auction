@@ -16,27 +16,39 @@ const BidBox = () => {
     const amount = Number(bidAmount);
 
     if (!auctionActive) {
-      setError('Auction is not active for this player');
+      const msg = "This player's auction has ended";
+      console.warn(`[Validation Failure] ${msg}`);
+      setError(msg);
       return;
     }
     if (amount <= currentBid) {
-      setError(`Bid must be higher than ₹${currentBid}`);
+      const msg = `Your bid must be higher than ₹${currentBid}`;
+      console.warn(`[Validation Failure] ${msg}`);
+      setError(msg);
       return;
     }
     if (currentPlayer && amount < currentPlayer.basePrice) {
-      setError(`Bid must be at least ₹${currentPlayer.basePrice}`);
+      const msg = `Bid must be at least ₹${currentPlayer.basePrice}`;
+      console.warn(`[Validation Failure] ${msg}`);
+      setError(msg);
       return;
     }
     if (myTeam && amount > myTeam.purse) {
-      setError(`Insufficient purse. You have ₹${myTeam.purse} left.`);
+      const msg = `You only have ₹${myTeam.purse} purse left`;
+      console.warn(`[Validation Failure] ${msg}`);
+      setError(msg);
       return;
     }
 
+    console.log(`[Bid Placed] Team ${userTeamId} placed bid of ₹${amount} for player ${currentPlayer._id}`);
     emitPlaceBid(currentPlayer._id, userTeamId, amount);
     setBidAmount('');
   };
 
   if (!currentPlayer) return null;
+
+  const minNextBid = Math.max(currentBid + 1, currentPlayer.basePrice);
+  const purseExhausted = myTeam && myTeam.purse <= currentBid;
 
   return (
     <div className="bid-box card">
@@ -49,15 +61,18 @@ const BidBox = () => {
             type="number"
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
-            placeholder={`Min ₹${Math.max(currentBid + 1, currentPlayer.basePrice)}`}
-            disabled={!auctionActive}
+            placeholder={`Min ₹${minNextBid}`}
+            disabled={!auctionActive || purseExhausted}
             className="bid-input"
           />
         </div>
-        <button 
-          type="submit" 
+        {purseExhausted && (
+          <div className="error-alert">You do not have enough purse to beat the current bid.</div>
+        )}
+        <button
+          type="submit"
           className="btn btn-primary btn-block"
-          disabled={!auctionActive || !bidAmount}
+          disabled={!auctionActive || !bidAmount || purseExhausted}
         >
           Place Bid
         </button>

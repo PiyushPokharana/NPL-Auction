@@ -6,7 +6,16 @@ let socket;
 
 export const initSocket = () => {
   if (!socket) {
-    socket = io(SOCKET_URL);
+    socket = io(SOCKET_URL, {
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      transports: ['websocket']
+    });
+
+    socket.on('connect', () => console.log('[Socket] connected', socket.id));
+    socket.on('disconnect', (reason) => console.warn('[Socket] disconnected', reason));
+    socket.on('connect_error', (err) => console.error('[Socket] connect_error', err));
+    socket.on('reconnect_attempt', (attempt) => console.log('[Socket] reconnect attempt', attempt));
   }
   return socket;
 };

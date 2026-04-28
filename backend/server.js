@@ -48,8 +48,11 @@ app.set('io', io);
 attachSocketHandlers(io);
 
 app.use((error, req, res, next) => {
-    console.error(error);
-    res.status(500).json({ message: 'Server error. Please try again.' });
+    console.error('[Server Error]', {
+        message: error.message,
+        stack: error.stack
+    });
+    res.status(500).json({ message: 'Something went wrong. Please refresh.' });
 });
 
 server.listen(PORT, () => {
