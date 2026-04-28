@@ -42,7 +42,7 @@ const startAuction = async (req, res, next) => {
 
         const io = req.app.get('io');
         io.emit('auctionStarted', {
-            currentPlayer: player,
+            player: player,
             currentBid: auctionState.currentBid,
             highestBidder: null,
             auctionActive: true
@@ -101,7 +101,13 @@ const acceptBid = async (req, res, next) => {
         await auctionState.save();
 
         const io = req.app.get('io');
-        io.emit('bidAccepted', { playerId, teamId, amount });
+        io.emit('bidAccepted', { 
+            playerId, 
+            teamId, 
+            amount,
+            updatedPlayer: player,
+            updatedTeam: team 
+        });
         io.emit('playerSold', { player });
         io.emit('auctionEnded', { playerId });
 

@@ -16,6 +16,7 @@ export const AuctionProvider = ({ children }) => {
   const [userTeamId, setUserTeamId] = useState(localStorage.getItem('npl_teamId') || null);
   
   const [auctionActive, setAuctionActive] = useState(false);
+  const [globalError, setGlobalError] = useState(null);
 
   useEffect(() => {
     if (userRole) {
@@ -43,7 +44,8 @@ export const AuctionProvider = ({ children }) => {
         players, setPlayers,
         userRole, setUserRole,
         userTeamId, setUserTeamId,
-        auctionActive, setAuctionActive
+        auctionActive, setAuctionActive,
+        globalError, setGlobalError
       }}
     >
       {children}
