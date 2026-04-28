@@ -35,3 +35,5 @@ Thumbs.db
 
 # Personal Files
 PHASE3_IMPLEMENTATION_STATUS.md
+*.md
+!README.md
