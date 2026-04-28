@@ -24,14 +24,13 @@ const ProtectedRoute = ({ children, allowedRole }) => {
 };
 
 const AppContent = () => {
-  const { globalError, setGlobalError } = useAuction();
+  const { globalError, setGlobalError, globalSuccess, setGlobalSuccess } = useAuction();
 
   React.useEffect(() => {
     const socket = initSocket();
     
     const handleErrorMessage = (data) => {
       setGlobalError(data.message);
-      setTimeout(() => setGlobalError(null), 5000); // clear after 5s
     };
 
     socket.on('errorMessage', handleErrorMessage);
@@ -40,6 +39,20 @@ const AppContent = () => {
     };
   }, [setGlobalError]);
 
+  React.useEffect(() => {
+    if (globalError) {
+      const timer = setTimeout(() => setGlobalError(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [globalError, setGlobalError]);
+
+  React.useEffect(() => {
+    if (globalSuccess) {
+      const timer = setTimeout(() => setGlobalSuccess(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [globalSuccess, setGlobalSuccess]);
+
   return (
     <div className="app">
       <Header />
@@ -47,6 +60,12 @@ const AppContent = () => {
         <div className="global-error-toast">
           {globalError}
           <button onClick={() => setGlobalError(null)}>&times;</button>
+        </div>
+      )}
+      {globalSuccess && (
+        <div className="global-success-toast">
+          {globalSuccess}
+          <button onClick={() => setGlobalSuccess(null)}>&times;</button>
         </div>
       )}
       <main className="main-content">

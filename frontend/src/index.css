@@ -225,11 +225,17 @@ body {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.5fr 1fr 1fr;
   gap: 2rem;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
@@ -547,7 +553,24 @@ body {
   animation: fadeIn 0.3s ease-out;
 }
 
-.global-error-toast button {
+.global-success-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--secondary);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.global-error-toast button,
+.global-success-toast button {
   background: transparent;
   border: none;
   color: white;
@@ -557,7 +580,8 @@ body {
   opacity: 0.8;
 }
 
-.global-error-toast button:hover {
+.global-error-toast button:hover,
+.global-success-toast button:hover {
   opacity: 1;
 }
 

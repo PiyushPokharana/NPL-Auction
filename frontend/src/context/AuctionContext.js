@@ -17,6 +17,7 @@ export const AuctionProvider = ({ children }) => {
   
   const [auctionActive, setAuctionActive] = useState(false);
   const [globalError, setGlobalError] = useState(null);
+  const [globalSuccess, setGlobalSuccess] = useState(null);
 
   useEffect(() => {
     if (userRole) {
@@ -45,7 +46,8 @@ export const AuctionProvider = ({ children }) => {
         userRole, setUserRole,
         userTeamId, setUserTeamId,
         auctionActive, setAuctionActive,
-        globalError, setGlobalError
+        globalError, setGlobalError,
+        globalSuccess, setGlobalSuccess
       }}
     >
       {children}

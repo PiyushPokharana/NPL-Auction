@@ -10,7 +10,7 @@ const LiveBidsList = () => {
     const socket = getSocket();
     
     const handleNewBid = (bidData) => {
-      setBids(prev => [bidData, ...prev].slice(0, 10)); // Keep last 10 bids
+      setBids(prev => [bidData, ...prev].slice(0, 5)); // Keep last 5 bids
     };
     
     const handleAuctionStarted = () => {
