@@ -25,7 +25,7 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await placeBid(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: error.message });
+                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
             });
         });
 
@@ -34,7 +34,7 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await startAuction(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: error.message });
+                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
             });
         });
 
@@ -43,7 +43,7 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await acceptBid(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: error.message });
+                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
             });
         });
 
@@ -52,7 +52,7 @@ const attachSocketHandlers = (io) => {
             const res = createMockRes(socket);
 
             await rejectBid(req, res, (error) => {
-                if (error) socket.emit('errorMessage', { message: error.message });
+                if (error) socket.emit('errorMessage', { message: 'Server error. Please try again.' });
             });
         });
 

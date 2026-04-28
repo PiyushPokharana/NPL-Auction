@@ -16,7 +16,7 @@ const BidBox = () => {
     const amount = Number(bidAmount);
 
     if (!auctionActive) {
-      setError('Auction is not active.');
+      setError('Auction is not active for this player');
       return;
     }
     if (amount <= currentBid) {

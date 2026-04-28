@@ -38,11 +38,11 @@ const placeBid = async (req, res, next) => {
         }
 
         if (amount < player.basePrice) {
-            return res.status(400).json({ message: `Bid must be at least ${player.basePrice}` });
+            return res.status(400).json({ message: `Bid must be at least ₹${player.basePrice}` });
         }
 
         if (team.purse < amount) {
-            return res.status(400).json({ message: `Insufficient purse. You have ${team.purse} left` });
+            return res.status(400).json({ message: `Insufficient purse. You have ₹${team.purse} left` });
         }
 
         auctionState.currentBid = amount;
